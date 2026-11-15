@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { debounce } from "../src/debounce";
 
 describe("debounce tests", () => {
+  vi.useFakeTimers();
+
   it("should delay execution and execute provided function", () => {
     const mockCallback = vi.fn();
     const debounceResult = debounce(mockCallback, 100);
