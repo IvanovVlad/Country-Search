@@ -4,6 +4,8 @@ import {
   type SearchByNameResponse,
   searchCountries,
 } from "../src/searchCountries";
+import { mapCountryResponse } from "../src/mapCountryResponse";
+import type { Country } from "../src/types";
 
 describe("debounce tests", () => {
   beforeEach(() => {
@@ -61,6 +63,55 @@ describe("debounce tests", () => {
   });
 });
 
+const mockedCountry: Country = {
+  name: "Israel",
+  topLevelDomain: [".il"],
+  alpha2Code: "IL",
+  alpha3Code: "ISR",
+  callingCodes: ["972"],
+  capital: "Jerusalem",
+  altSpellings: ["string"],
+  subregion: "Western Asia",
+  region: "Asia",
+  population: 9216900,
+  latlng: [31.5, 34.75],
+  demonym: "Israeli",
+  area: 20770,
+  timezones: ["UTC+02:00"],
+  borders: ["EGY", "JOR", "LBN", "SYR"],
+  nativeName: "ישראל",
+  numericCode: "376",
+  flags: {
+    svg: "http://example.com",
+    png: "http://example.com",
+  },
+  currencies: [
+    {
+      code: "ILS",
+      name: "Israeli new shekel",
+      symbol: "₪",
+    },
+  ],
+  languages: [
+    {
+      iso639_1: "he",
+      iso639_2: "heb",
+      name: "Hebrew",
+      nativeName: "עברית",
+    },
+  ],
+  flag: "🇮🇱",
+  maps: {
+    googleMaps: "http://example.com",
+    openStreetMaps: "http://example.com",
+  },
+  populationDensity: 443.6,
+};
+
+const getCopyOfMockedCountry = () => {
+  return JSON.parse(JSON.stringify(mockedCountry));
+};
+
 describe("searchCountries tests", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -68,50 +119,7 @@ describe("searchCountries tests", () => {
 
   it("should return correct value", async () => {
     const expectedSearchResponse: SearchByNameResponse = [
-      {
-        name: "Israel",
-        topLevelDomain: [".il"],
-        alpha2Code: "IL",
-        alpha3Code: "ISR",
-        callingCodes: ["972"],
-        capital: "Jerusalem",
-        altSpellings: ["string"],
-        subregion: "Western Asia",
-        region: "Asia",
-        population: 9216900,
-        latlng: [31.5, 34.75],
-        demonym: "Israeli",
-        area: 20770,
-        timezones: ["UTC+02:00"],
-        borders: ["EGY", "JOR", "LBN", "SYR"],
-        nativeName: "ישראל",
-        numericCode: "376",
-        flags: {
-          svg: "http://example.com",
-          png: "http://example.com",
-        },
-        currencies: [
-          {
-            code: "ILS",
-            name: "Israeli new shekel",
-            symbol: "₪",
-          },
-        ],
-        languages: [
-          {
-            iso639_1: "he",
-            iso639_2: "heb",
-            name: "Hebrew",
-            nativeName: "עברית",
-          },
-        ],
-        flag: "🇮🇱",
-        maps: {
-          googleMaps: "http://example.com",
-          openStreetMaps: "http://example.com",
-        },
-        populationDensity: 443.6,
-      },
+      getCopyOfMockedCountry(),
     ];
     const fetchStub = vi.fn().mockResolvedValue({
       ok: true,
@@ -180,5 +188,21 @@ describe("searchCountries tests", () => {
 
       expect(fetchStub).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe("mapCountryResponse tests", () => {
+  it("should resolve fields correctly", () => {
+    const mockedCountry: Country = getCopyOfMockedCountry();
+
+    const cardData = mapCountryResponse(mockedCountry);
+
+    expect(cardData.capital).toBe(mockedCountry.capital);
+    expect(cardData.languages).toEqual(
+      mockedCountry.languages?.map((l) => l.name),
+    );
+    expect(cardData.name).toBe(mockedCountry.name);
+    expect(cardData.population).toBe(mockedCountry.population);
+    expect(cardData.region).toBe(mockedCountry.region);
   });
 });
