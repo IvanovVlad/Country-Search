@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { debounce } from "../src/debounce";
 import {
+  prepareSearchString,
   type SearchByNameResponse,
   searchCountries,
 } from "../src/searchCountries";
@@ -187,6 +188,41 @@ describe("searchCountries tests", () => {
       await searchCountries(query);
 
       expect(fetchStub).not.toHaveBeenCalled();
+    });
+  });
+
+  it("should prepare url path param", async () => {
+    const fetchStub = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => [],
+    } as Response);
+    vi.stubGlobal("fetch", fetchStub);
+    const pathParam = " abc/ ";
+    const pathParamExpected = "abc%2F";
+
+    await searchCountries(pathParam);
+    const usedFetchUrl = fetchStub.mock.calls[0][0];
+
+    expect(usedFetchUrl).include(pathParamExpected);
+  });
+
+  describe("prepare path parameter", () => {
+    it("should trim query", () => {
+      const expected = "abc";
+      const initial = " abc ";
+
+      const result = prepareSearchString(initial);
+
+      expect(result).toBe(expected);
+    });
+    it("should encode / and other special characters", () => {
+      const initial = " abc / . ?";
+      const expected = "abc%20%2F%20.%20%3F";
+
+      const result = prepareSearchString(initial);
+
+      expect(result).toBe(expected);
     });
   });
 });

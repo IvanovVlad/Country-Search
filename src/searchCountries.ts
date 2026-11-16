@@ -2,6 +2,10 @@ import type { Country } from "./types.ts";
 
 export type SearchByNameResponse = Country[];
 
+export const prepareSearchString = (query: string): string => {
+  throw new Error(`Not implemented ${query}`);
+};
+
 export const searchCountries = async (
   query: string,
   signal?: AbortSignal,
