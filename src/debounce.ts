@@ -3,8 +3,8 @@ export const debounce = <T extends unknown[], U>(
   delay: number,
 ): ((...args: T) => void) => {
   let timerId: number | undefined;
-  return () => {
+  return (...params: T) => {
     clearTimeout(timerId);
-    timerId = setTimeout(fn, delay);
+    timerId = setTimeout(() => fn(...params), delay);
   };
 };
