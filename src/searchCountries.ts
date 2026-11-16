@@ -8,7 +8,7 @@ export const searchCountries = async (
 ): Promise<SearchByNameResponse> => {
   const preparedQuery = query.trim();
   if (!preparedQuery) return [];
-  return fetch(`https://countries.dev/name/${query}`, {
+  return fetch(`https://countries.dev/name/${preparedQuery}`, {
     signal,
   })
     .then(async (r) => {
