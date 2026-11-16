@@ -62,6 +62,19 @@ describe("debounce tests", () => {
     expect(mockCallback1).toHaveBeenCalledTimes(1);
     expect(mockCallback2).toHaveBeenCalledTimes(1);
   });
+  it("should call function with passed args", () => {
+    const mockCallback = vi.fn();
+    const debounceResult = debounce(mockCallback, 100);
+    const args = ["a", "b", "c"];
+
+    debounceResult();
+    vi.advanceTimersByTime(10);
+    debounceResult(...args);
+    vi.advanceTimersByTime(100);
+
+    expect(mockCallback).toHaveBeenCalledOnce();
+    expect(mockCallback.mock.calls[0]).toEqual(args);
+  });
 });
 
 const mockedCountry: Country = {
