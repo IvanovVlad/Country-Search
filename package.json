@@ -11,7 +11,8 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --ignore-unknown",
     "format:fix": "prettier --write --ignore-unknown .",
-    "test": "vitest"
+    "test": "vitest --run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
