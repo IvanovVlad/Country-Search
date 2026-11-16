@@ -1,5 +1,5 @@
 import type { Country } from "./types.ts";
-import { HttpError } from "./HttpError.ts";
+import { HttpError } from "./exceptions/HttpError.ts";
 
 export type SearchByNameResponse = Country[];
 
@@ -13,8 +13,14 @@ export const searchCountries = async (
 ): Promise<SearchByNameResponse> => {
   const preparedQuery = prepareSearchString(query);
   if (!preparedQuery) return [];
+
+  const timeoutSignal: AbortSignal = AbortSignal.timeout(1500);
+  const signals = [timeoutSignal];
+  if (signal) {
+    signals.push(signal);
+  }
   return fetch(`https://countries.dev/name/${preparedQuery}`, {
-    signal,
+    signal: AbortSignal.any(signals),
   })
     .then(async (r) => {
       if (r.ok) {
@@ -29,8 +35,11 @@ export const searchCountries = async (
       throw new HttpError(r.status, r.statusText);
     })
     .catch((e: Error) => {
-      if (signal?.aborted) {
-        throw new Error("AbortError");
+      if (e.name === "TimeoutError") {
+        throw e;
+      }
+      if (e.name === "AbortError") {
+        throw e;
       }
 
       if (e instanceof HttpError) {

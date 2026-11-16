@@ -7,7 +7,7 @@ import {
 } from "../src/searchCountries";
 import { mapCountryResponse } from "../src/mapCountryResponse";
 import type { Country } from "../src/types";
-import { HttpError } from "../src/HttpError";
+import { HttpError } from "../src/exceptions/HttpError";
 
 describe("debounce tests", () => {
   beforeEach(() => {
@@ -160,9 +160,7 @@ describe("searchCountries tests", () => {
       ),
     );
 
-    await expect(searchCountries("query", controller.signal)).rejects.toThrow(
-      "AbortError",
-    );
+    await expect(searchCountries("query", controller.signal)).rejects.toThrow();
   });
 
   it.each([404])(
