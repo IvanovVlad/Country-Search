@@ -1,4 +1,5 @@
 import type { Country } from "./types.ts";
+import { HttpError } from "./HttpError.ts";
 
 export type SearchByNameResponse = Country[];
 
@@ -16,16 +17,27 @@ export const searchCountries = async (
     signal,
   })
     .then(async (r) => {
-      const response: SearchByNameResponse = await r.json();
-      return response;
+      if (r.ok) {
+        const response: SearchByNameResponse = await r.json();
+        return response;
+      }
+
+      if (r.status === 404) {
+        return [] as SearchByNameResponse;
+      }
+
+      throw new HttpError(r.status, r.statusText);
     })
-    .catch((e: Response) => {
+    .catch((e: Error) => {
       if (signal?.aborted) {
         throw new Error("AbortError");
       }
-      if ([400, 404, 429, 500, 503].includes(e.status)) {
-        return [];
+
+      if (e instanceof HttpError) {
+        e.message = `Failed to fetch api: ${e.statusCode} ${e.message}`;
+        throw e;
       }
+
       throw new Error("Failed to fetch api");
     });
 };
