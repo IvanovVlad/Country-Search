@@ -6,6 +6,7 @@ export type UiCard = {
   region: string;
   population?: number;
   languages: string[];
+  flag?: string;
 };
 
 export const mapCountryResponse = (country: Country): UiCard => {
@@ -14,6 +15,7 @@ export const mapCountryResponse = (country: Country): UiCard => {
     capital: country.capital,
     region: country.region,
     population: country.population,
+    flag: country?.flags?.png || country?.flags?.svg,
     languages:
       country.languages?.reduce((acc, l) => {
         if (l.name) {
