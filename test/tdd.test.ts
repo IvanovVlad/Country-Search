@@ -7,6 +7,7 @@ import {
 } from "../src/searchCountries";
 import { mapCountryResponse } from "../src/mapCountryResponse";
 import type { Country } from "../src/types";
+import { HttpError } from "../src/HttpError";
 
 describe("debounce tests", () => {
   beforeEach(() => {
@@ -164,7 +165,7 @@ describe("searchCountries tests", () => {
     );
   });
 
-  it.each([400, 404, 429, 500, 503])(
+  it.each([404])(
     "should return empty array on %i fetch error",
     async (status) => {
       const fetchStub = vi.fn().mockResolvedValue({
@@ -178,6 +179,20 @@ describe("searchCountries tests", () => {
 
       expect(fetchStub).toHaveBeenCalledOnce();
       expect(response).toEqual([]);
+    },
+  );
+
+  it.each([400, 429, 500, 503])(
+    "should throw error on http error status %i",
+    async (status) => {
+      const fetchStub = vi.fn().mockResolvedValue({
+        ok: false,
+        status,
+        json: async () => [],
+      } as Response);
+      vi.stubGlobal("fetch", fetchStub);
+
+      await expect(searchCountries("Israel")).rejects.toBeInstanceOf(HttpError);
     },
   );
 
