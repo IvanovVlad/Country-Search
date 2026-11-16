@@ -3,14 +3,14 @@ import type { Country } from "./types.ts";
 export type SearchByNameResponse = Country[];
 
 export const prepareSearchString = (query: string): string => {
-  throw new Error(`Not implemented ${query}`);
+  return encodeURIComponent(query.trim());
 };
 
 export const searchCountries = async (
   query: string,
   signal?: AbortSignal,
 ): Promise<SearchByNameResponse> => {
-  const preparedQuery = query.trim();
+  const preparedQuery = prepareSearchString(query);
   if (!preparedQuery) return [];
   return fetch(`https://countries.dev/name/${preparedQuery}`, {
     signal,
