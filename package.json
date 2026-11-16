@@ -30,7 +30,7 @@
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [
-      "eslint --fix ."
+      "eslint --fix"
     ],
     "*": [
       "prettier --write --ignore-unknown"
