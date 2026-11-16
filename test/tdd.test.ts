@@ -123,7 +123,7 @@ const mockedCountry: Country = {
 };
 
 const getCopyOfMockedCountry = () => {
-  return JSON.parse(JSON.stringify(mockedCountry));
+  return structuredClone(mockedCountry);
 };
 
 describe("searchCountries tests", () => {
@@ -253,5 +253,6 @@ describe("mapCountryResponse tests", () => {
     expect(cardData.name).toBe(mockedCountry.name);
     expect(cardData.population).toBe(mockedCountry.population);
     expect(cardData.region).toBe(mockedCountry.region);
+    expect(cardData.flag).toBe(mockedCountry?.flags?.png);
   });
 });
