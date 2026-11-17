@@ -1,18 +1,25 @@
 import { debounce } from "./debounce.ts";
-import { searchByName, type SearchByNameResponse } from "./searchByName.ts";
+import { searchByName } from "./searchByName.ts";
+import type { Country } from "./types.ts";
+import { mapCountryResponse, type UiCard } from "./mapCountryResponse.ts";
+
+export type SearchCountryResponse = { country: Country; card: UiCard }[];
 
 export const searchCountry = (
-  notifyResponseChange: (response: SearchByNameResponse) => void,
+  notifyResponseChange: (response: SearchCountryResponse) => void,
   notifyError?: (error: Error) => void,
 ) => {
   let abortController = new AbortController();
-  let response: SearchByNameResponse = [];
+  let response: { country: Country; card: UiCard }[] = [];
 
-  const debounced = debounce<[string], Promise<SearchByNameResponse | void>>(
+  const debounced = debounce<[string], Promise<SearchCountryResponse | void>>(
     (...args) =>
       searchByName(args[0], abortController.signal)
         .then((r) => {
-          response = r;
+          response = r.map((country) => ({
+            country,
+            card: mapCountryResponse(country),
+          }));
           notifyResponseChange(response);
           return response;
         })
