@@ -1,3 +1,89 @@
 body {
   margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+#app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.status {
+  color: #666;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.card {
+  cursor: pointer;
+}
+
+.card p {
+  margin: 4px 0;
+}
+
+.details {
+  width: min(480px, calc(100% - 32px));
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+}
+
+.details::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+.details > button {
+  display: block;
+  margin: 8px 8px 0 auto;
+}
+
+.details-content {
+  padding: 16px;
+}
+
+.details dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 12px;
+}
+
+.details dt {
+  font-weight: 600;
+}
+
+.details dd {
+  margin: 0;
 }
