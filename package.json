@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --ignore-unknown",
+    "format": "prettier --check ./src/",
     "format:fix": "prettier --write --ignore-unknown .",
     "test": "vitest --run",
     "test:watch": "vitest",
