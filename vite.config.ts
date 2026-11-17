@@ -1,0 +1,8 @@
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  base: "/Country-Search/",
+  build: {
+    sourcemap: true,
+  },
+});
