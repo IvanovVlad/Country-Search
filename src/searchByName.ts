@@ -7,7 +7,7 @@ export const prepareSearchString = (query: string): string => {
   return encodeURIComponent(query.trim());
 };
 
-export const searchCountries = async (
+export const searchByName = async (
   query: string,
   signal?: AbortSignal,
 ): Promise<SearchByNameResponse> => {

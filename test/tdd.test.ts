@@ -3,8 +3,8 @@ import { debounce } from "../src/debounce";
 import {
   prepareSearchString,
   type SearchByNameResponse,
-  searchCountries,
-} from "../src/searchCountries";
+  searchByName,
+} from "../src/searchByName";
 import { mapCountryResponse } from "../src/mapCountryResponse";
 import type { Country } from "../src/types";
 import { HttpError } from "../src/exceptions/HttpError";
@@ -144,7 +144,7 @@ describe("searchCountries tests", () => {
     vi.stubGlobal("fetch", fetchStub);
     const query = "Israel";
 
-    const response = await searchCountries(query);
+    const response = await searchByName(query);
 
     expect(fetchStub).toHaveBeenCalledOnce();
     expect(response).toStrictEqual(expectedSearchResponse);
@@ -160,7 +160,7 @@ describe("searchCountries tests", () => {
       ),
     );
 
-    await expect(searchCountries("query", controller.signal)).rejects.toThrow();
+    await expect(searchByName("query", controller.signal)).rejects.toThrow();
   });
 
   it.each([404])(
@@ -173,7 +173,7 @@ describe("searchCountries tests", () => {
       } as Response);
       vi.stubGlobal("fetch", fetchStub);
 
-      const response = await searchCountries("Israel");
+      const response = await searchByName("Israel");
 
       expect(fetchStub).toHaveBeenCalledOnce();
       expect(response).toEqual([]);
@@ -190,7 +190,7 @@ describe("searchCountries tests", () => {
       } as Response);
       vi.stubGlobal("fetch", fetchStub);
 
-      await expect(searchCountries("Israel")).rejects.toBeInstanceOf(HttpError);
+      await expect(searchByName("Israel")).rejects.toBeInstanceOf(HttpError);
     },
   );
 
@@ -204,14 +204,14 @@ describe("searchCountries tests", () => {
 
     it("on empty string", async () => {
       const query = "";
-      await searchCountries(query);
+      await searchByName(query);
 
       expect(fetchStub).not.toHaveBeenCalled();
     });
 
     it("on spaces string", async () => {
       const query = "   ";
-      await searchCountries(query);
+      await searchByName(query);
 
       expect(fetchStub).not.toHaveBeenCalled();
     });
@@ -227,7 +227,7 @@ describe("searchCountries tests", () => {
     const pathParam = " abc/ ";
     const pathParamExpected = "abc%2F";
 
-    await searchCountries(pathParam);
+    await searchByName(pathParam);
     const usedFetchUrl = fetchStub.mock.calls[0][0];
 
     expect(usedFetchUrl).include(pathParamExpected);
